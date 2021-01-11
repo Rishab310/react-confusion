@@ -27,28 +27,28 @@ class DishDetail extends Component {
     };
 
     renderComments(dish) {
-        if (dish!=null && dish.comments != null) {
+        if (dish != null && dish.comments != null) {
             return (
                 <div>
-                <h4>Comments</h4>
-                <ul className="list-unstyled">
-                    {
-                        dish.comments.map((comm) => {
-                            return(
-                                <li>
-                                    <div>
-                                        {comm.comment}
-                                    </div>
-                                    <br/>
-                                    <div>
-                                        --{comm.author} , {Date(comm.date).toString()}
-                                    </div>
-                                    <br/>
-                                </li>
-                            );
-                        })
-                    }
-                </ul>
+                    <h4>Comments</h4>
+                    <ul className="list-unstyled">
+                        {
+                            dish.comments.map((comm) => {
+                                return (
+                                    <li>
+                                        <div>
+                                            {comm.comment}
+                                        </div>
+                                        <br />
+                                        <div>
+                                            --{comm.author} , {new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit' }).format(new Date(Date.parse(comm.date)))}
+                                        </div>
+                                        <br />
+                                    </li>
+                                );
+                            })
+                        }
+                    </ul>
                 </div>
             );
         }
@@ -59,14 +59,16 @@ class DishDetail extends Component {
         }
     };
 
-    render() { 
-        return (  
-            <div className="row">
-                <div className="col-12 col-md-5 m-1">
-                    {this.renderDish(this.props.dish)}
-                </div>
-                <div className="col-12 col-md-5 m-1">
-                    {this.renderComments(this.props.dish)}
+    render() {
+        return (
+            <div className="container">
+                <div className="row">
+                    <div className="col-12 col-md-5 m-1">
+                        {this.renderDish(this.props.dish)}
+                    </div>
+                    <div className="col-12 col-md-5 m-1">
+                        {this.renderComments(this.props.dish)}
+                    </div>
                 </div>
             </div>
         );
