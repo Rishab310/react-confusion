@@ -139,7 +139,7 @@ function RenderComments({ comments, addComment, dishId }) {
 };
 function DishDetail(props) {
   return (
-    <div className="container"><br/>
+    <div className="container">
       <div className="row">
         <Breadcrumb>
           <BreadcrumbItem><Link to='/menu'>Menu</Link></BreadcrumbItem>
@@ -159,7 +159,7 @@ function DishDetail(props) {
             addComment={props.addComment}
             dishId={props.dish.id}/>
         </div>
-      </div><br/><br/><br/>
+      </div><br/>
     </div>
   );
 }
