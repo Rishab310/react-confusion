@@ -3,15 +3,49 @@ import { DISHES } from '../shared/dishes';
 import { baseUrl } from '../shared/baseUrl';
 
 // FOR CREATING A NEW COMMENT
-export const addComment = (dishId, rating, author, comment) => ({
+export const addComment = (comment) => ({
   type: ActionTypes.ADD_COMMENT,
-  payload: {
+  payload: comment
+});
+
+
+export const postComment = (dishId, rating, author, comment) => (dispatch) => {
+  const newComment = {
     dishId: dishId,
     rating: rating,
     author: author,
     comment: comment
   }
-});
+  newComment.date = new Date().toISOString();
+  return fetch(baseUrl + 'comments', {
+    method: 'POST',
+    body: JSON.stringify(newComment),
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    credentials: 'same-origin'
+  })
+    .then(res => {
+      if (res.ok) {
+        return res;
+      } else {
+        var error = new Error('Error ' + res.status + ': ' + res.statusText);
+        error.res = res;
+        throw error;
+      }
+    },
+      error => {
+        var errmess = new Error(error.message);
+        throw errmess;
+      })
+    .then(res => res.json())
+    .then(res => dispatch(addComment(res)))
+    .catch(error => {
+      console.log('Post comments ', error.message);
+      alert('Your comment could not be posted\nError: ' + error.message);
+    });
+}
+
 
 // FOR LOADING THE DISHES
 export const addDishes = (dishes) => ({
@@ -74,7 +108,7 @@ export const fetchComments = () => (dispatch) => {
       })
     .then(res => res.json())
     .then(comments => dispatch(addComments(comments)))
-    .catch (error => dispatch(commentsFailed(error.message)));
+    .catch(error => dispatch(commentsFailed(error.message)));
 }
 export const commentsFailed = (errmess) => ({
   type: ActionTypes.COMMENTS_FAILED,
@@ -106,7 +140,7 @@ export const fetchPromos = () => (dispatch) => {
       })
     .then(res => res.json())
     .then(promos => dispatch(addPromos(promos)))
-    .catch (error => dispatch(promosFailed(error.message)));
+    .catch(error => dispatch(promosFailed(error.message)));
 }
 
 export const promosLoading = () => ({
