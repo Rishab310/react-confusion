@@ -1,5 +1,4 @@
 import * as ActionTypes from './ActionTypes';
-import { DISHES } from '../shared/dishes';
 import { baseUrl } from '../shared/baseUrl';
 
 // FOR CREATING A NEW COMMENT
@@ -190,3 +189,35 @@ export const leadersFailed = (errmess) => ({
   payload: errmess
 });
 
+
+// POSTING FEEDBACK 
+export const postFeedback = (feedback) => (dispatch) => {
+
+  return fetch(baseUrl + 'feedback', {
+    method: 'POST',
+    body: JSON.stringify(feedback),
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    credentials: 'same-origin'
+  })
+    .then(res => {
+      if (res.ok) {
+        return res;
+      } else {
+        var error = new Error('Error ' + res.status + ': ' + res.statusText);
+        error.res = res;
+        throw error;
+      }
+    },
+      error => {
+        var errmess = new Error(error.message);
+        throw errmess;
+      })
+    .then(res => res.json())
+    .then(res => alert('Thank you for your feedback!\n'+JSON.stringify(res)))
+    .catch(error => {
+      console.log('Post Feedback ', error.message);
+      alert('Your Feedback could not be posted\nError: ' + error.message);
+    });
+}
